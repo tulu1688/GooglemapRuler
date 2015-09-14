@@ -13,7 +13,7 @@ RulerTool.prototype = new google.maps.OverlayView();
 
 RulerTool.prototype.onAdd = function () {
     var me = this;
-	this.listenerHandler = google.maps.event.addListener(map, 'idle', this.draw);
+	this.listenerHandler = google.maps.event.addListener(this.map, 'idle', this.draw);
     this.initDiv();
 }
 
@@ -39,7 +39,7 @@ RulerTool.prototype.draw = function () {
 
     var initRulerElemListeners = function () {
         var disableDragging = function(event){
-            map.setOptions({draggable: false});
+            me.map.setOptions({draggable: false});
         };
 
         $('#center_handle').mousedown(disableDragging)
@@ -49,7 +49,7 @@ RulerTool.prototype.draw = function () {
         var ptopstr = document.getElementById("ruler_layer").style.top;
 
         $('#center_handle').mouseup(function(event){
-            map.setOptions({draggable: true});
+            me.map.setOptions({draggable: true});
 
             // set new spot location
             var proj = me.getProjection();
@@ -70,7 +70,7 @@ RulerTool.prototype.draw = function () {
         });
 
         $('#spot_div').mouseup(function(event){
-            map.setOptions({draggable: true});
+            me.map.setOptions({draggable: true});
 
             // set new spot location
             var proj = me.getProjection();
@@ -116,7 +116,7 @@ RulerTool.prototype.draw = function () {
     }
 
     var getLocWithOffset = function(map,loc,offsetx,offsety) {
-        var point1 = map.getProjection().fromLatLngToPoint(loc);
+        var point1 = me.map.getProjection().fromLatLngToPoint(loc);
         var point2 = new google.maps.Point(offsetx / Math.pow(2, map.getZoom()),offsety / Math.pow(2, map.getZoom()));
         return map.getProjection().fromPointToLatLng(new google.maps.Point(
             point1.x + point2.x,
@@ -263,7 +263,7 @@ RulerTool.prototype.draw = function () {
     spotDiv.style.position = 'absolute';
     spotDiv.style.cursor = 'pointer';
     var img = document.createElement('img');
-    img.src = '/images/green_dot.png';
+    img.src = './images/green_dot.png';
     img.style.width = '100%';
     img.style.height = '100%';
     spotDiv.appendChild(img);
@@ -338,6 +338,15 @@ RulerTool.prototype.onRemove = function () {
 ///////////////////////////////////////////////////////////////////////////////
 var rulerMode = false;
 var rulerTool = null;
+
+/**
+ * @brief Override javascript tofix function. The original one is too buggy
+ */
+function toFixed (number, precision) {
+    var multiplier = Math.pow( 10, precision + 1 ),
+        wholeNumber = Math.floor( number * multiplier );
+    return Math.round( wholeNumber / 10 ) * 10 / multiplier;
+}
 
 function addruler(map) {
 	rulerTool = new RulerTool(map, map.getCenter());
