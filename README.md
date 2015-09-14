@@ -1,7 +1,9 @@
 # GooglemapRuler
 
 # Create new ruller
-
+addRuler(map);
+# Hide the ruler
+clearRuler();
 
 # dependancies
 - You must implement Jquery and JqueryUI lib to your html
