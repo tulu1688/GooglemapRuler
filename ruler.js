@@ -336,9 +336,6 @@ RulerTool.prototype.onRemove = function () {
 ///////////////////////////////////////////////////////////////////////////////
 // RulerTool variables and functions
 ///////////////////////////////////////////////////////////////////////////////
-var rulerMode = false;
-var rulerTool = null;
-
 /**
  * @brief Override javascript tofix function. The original one is too buggy
  */
@@ -348,23 +345,22 @@ function toFixed (number, precision) {
     return Math.round( wholeNumber / 10 ) * 10 / multiplier;
 }
 
+/**
+ * @brief [Add ruler function]
+ * @param  [map] : google map entity
+ */
+var rulerTool = null;
 function addruler(map) {
 	rulerTool = new RulerTool(map, map.getCenter());
 }
 
+/**
+ * @brief [Clear the ruler from the google map]
+ * @details [hide/clear the exited ruler]
+ */
 function clearRuler() {
 	if (rulerTool) {
 		rulerTool.setMap(null);
 		rulerTool = null;
-	}
-}
-
-function toggleRuler(){
-	rulerMode = !rulerMode;
-
-	if (rulerMode) {
-		addruler(map);
-	} else {
-		clearRuler();
 	}
 }
